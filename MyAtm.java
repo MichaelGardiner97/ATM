@@ -89,60 +89,64 @@ public class MyAtm {
     }
 
     public boolean logIn(){
+        boolean wasUserFound = false;
+
         while (true){
             System.out.print("\nEnter Username: ");
             String name = scan.next().trim();
 
+            // Allows an admin account to shut down myAtm
+            if(name.toLowerCase().equals("admin")){
+                System.out.print("Enter Pin: ");
+                int pin = scan.nextInt();
+                if(pin == 0000){
+                    System.out.println("Shutting Down");
+                    wasUserFound = true;
+                    return false;
+                }
+            }
+            // Allows known-users to log in
             for (int i = 0; i < info.size(); i++) {
-                if(name.toLowerCase().equals("admin")){
-                    System.out.print("Enter Pin: ");
-                    int pin = scan.nextInt();
-                    if(pin == 0000){
-                        System.out.println("Shutting Down");
-                        return false;
-                    }
-                } else if (name.toLowerCase().equals(this.info.get(i).getUserName())){
+                if (name.toLowerCase().equals(this.info.get(i).getUserName())){
                     System.out.print("Enter Pin: ");
                     int pin = scan.nextInt();
                     if (pin == this.info.get(i).getPin()){
                         this.num = i;
+                        wasUserFound = true;
                         return true;
                     } else {System.out.println("Incorrect Pin");}
-                    }
-                /**
-                 * SUCCESSFULLY ADDS NEW ACCOUNT TO accounts.txt BUT DOES NOT RECOGNIZE IT AFTER RE-START OF ATM
-                 **/
-                else {
-                    System.out.print("Your account could not be found, would you like to create an account? (yes/no): ");
-                    String ans = scan.next().trim();
-                    if (ans.toLowerCase().equals("yes")) {
-                        System.out.print("\nEnter new username: ");
-                        String newUser = scan.next().trim();
-                        System.out.print("Re-enter new username: ");
-                        String checkNewUser = scan.next().trim();
-                        if (checkNewUser.equals(newUser)) {
-                            System.out.print("Enter new pin: ");
-                            int newPin = scan.nextInt();
-                            System.out.print("Re-enter new pin number: ");
-                            int checkPin = scan.nextInt();
-                            if (newPin == checkPin) {
-                                this.info.add(new Accounts(newUser, newPin, 1000));
-                                this.returnValues();
-                                System.out.println("Please start the ATM up again. ");
-                                return false;
-                            } else {
-                                System.out.println("Pins do not match up");
-                                break;
-                            }
-                        } else{
-                            System.out.println("Usernames do not match up");
+                }
+            }
+            // Allows user to add a new account if they so wish
+            if (!wasUserFound) {
+                System.out.print("Your account could not be found, would you like to create an account? (yes/no): ");
+                String ans = scan.next().trim();
+                if (ans.toLowerCase().equals("yes")) {
+                    System.out.print("\nEnter new username: ");
+                    String newUser = scan.next().trim();
+                    System.out.print("Re-enter new username: ");
+                    String checkNewUser = scan.next().trim();
+                    if (checkNewUser.equals(newUser)) {
+                        System.out.print("Enter new pin: ");
+                        int newPin = scan.nextInt();
+                        System.out.print("Re-enter new pin number: ");
+                        int checkPin = scan.nextInt();
+                        if (newPin == checkPin) {
+                            this.info.add(new Accounts(newUser, newPin, 1000));
+                            this.returnValues();
+                            continue;
+                        } else {
+                            System.out.println("Pins do not match up");
                             break;
                         }
-                    } else {break;}
-                }
-
+                    } else{
+                        System.out.println("Usernames do not match up");
+                        break;
+                    }
+                } else {continue;}
             }
         }
+        return wasUserFound;
     }
 
     public void run(){
