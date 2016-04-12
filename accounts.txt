@@ -1,4 +1,4 @@
-gardiner, 1997, 2000.0
+gardiner, 1029, 2000.0
 barr, 5656, 1600.0
 dickson, 1234, 350.0
 dragon, 3415, 1500.0
@@ -6,4 +6,3 @@ erkan, 1212, 900.12
 prestopnik, 1004, 760.0
 stansfield, 4321, 400.03
 turnbull, 8888, 1500.0
-mike, 1111, 10898.0
